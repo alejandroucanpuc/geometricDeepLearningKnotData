@@ -107,7 +107,7 @@ def fetchDataset(filePath = PATH):
         knotinfo["graph"] = knotinfo["graph"].apply(makeReadable)
         knotinfo["graph"] = knotinfo["graph"].apply(json.loads)
         # print(knotinfo["graph"][0], json.loads(knotinfo["graph"][0]))
-        knot_dataset["graph"]=knotinfo["graph"].apply(lambda input_string: nx.node_link_graph(input_string))
+        knot_dataset["graph"]=knotinfo["graph"].apply(lambda input_string: nx.node_link_graph(input_string, edges="links"))
 
     # alternating, fibered, a positive braid closure, or large or small,
     # together with integer-valued variables which encode the crossing number, Seifert
