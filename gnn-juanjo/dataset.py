@@ -1,7 +1,7 @@
 # Other scripts...
 from settings import *
-from knotGraph import graphRepresentation
-from planarDiagram import Knot
+from knot_to_graph import graphRepresentation
+from planar_diagram import Knot
 
 # Python libraries...
 import pandas as pd

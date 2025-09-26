@@ -10,7 +10,10 @@ class Crossing():
         assert len(cross)==4
         self.crossing = cross
     
-    def corresponceRotationPath(self,path,rotation=1,indexNext=0):# index next for twisted crossings
+    def corresponceRotationPath(self,path, rotation=1, indexNext=0):# index next for twisted crossings
+        """
+        Applies a rotation respect to a path in a Crossing. Returns the resulting path after the rotation.
+        """
         return self.crossing[(list(self.crossing).index(path,indexNext)+rotation)%4]
 
     def __contains__(self, el):
@@ -68,6 +71,9 @@ class Knot():
         return [cross.crossing for cross in self.crossings]
 
     def findCrossingWithPath(self,path,exclude=[]):
+        """
+        Retorna una lista con los Crossings que contienen un determinado path.
+        """
         return list(filter(lambda x: path in x and x not in exclude,self.crossings))
 
     def twist(self,path): # first reidermeister move
@@ -217,7 +223,9 @@ class Knot():
         if hash(self)^hash(path)^hash(rotation) in self._cache.keys():
             return self._cache[cashHash]
         # algorithm
+        # Add path to the list...
         paths = [path]
+        # Pick a crossing that contains that path...
         nextCrossing = self.findCrossingWithPath(path)[0] # choice between doesent matter
         path = nextCrossing.corresponceRotationPath(path,rotation)
         # print(self,path)
@@ -422,6 +430,10 @@ class Knot():
 
     #@functools.cached_property
     def paths(self):
+        """
+        Función que retorna un set de Python con los labels de los paths (edges del nudo).
+        Estos están numerados del 1 al N de acuerdo al planar diagram.
+        """
         return set(
                 [crossing.up() for crossing in self.crossings]
             ).union(
@@ -438,9 +450,23 @@ class Knot():
         in the order they are first encountered when walking along the knot
         with some arbitrary starting point and orientation.
         """
+        # Coloca un label temporal que inicia con "_" antes de empezar a recorrer el nudo.
         for i,path in enumerate(self.paths()):
-            self.renamePathGlobally(path,f"_{i}")
-        for i,path in enumerate(self.facingPaths(self.crossings[0].up(),2)): # the facing paths are such that you walk along the knot starting at an arbitrary path
+            self.renamePathGlobally(path, f"_{i}")
+
+        # Recorre el nudo en una dirección fija.
+        ordered_paths = []
+        while set(ordered_paths) != self.paths():
+            # Pick an arbitrary crossing to start with
+            pending_paths = self.paths() - set(ordered_paths)
+            next_path = list(pending_paths)[0]
+            # Agregar los paths de la nueva componente al set
+            ordered_paths += self.facingPaths(next_path, 2)
+
+
+        for i,path in enumerate(ordered_paths): # The facing paths are such that you walk along the knot starting at an arbitrary path
+            # Inicia arbitrariamente en el path "up" del primer crossing.
+            # El 2 es la rotación que aplica para pasar al siguiente path.
             self.renamePathGlobally(path,i)
 
     def dump(self):

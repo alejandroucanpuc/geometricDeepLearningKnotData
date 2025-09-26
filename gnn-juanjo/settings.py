@@ -7,7 +7,7 @@ PATH = "./datasets/knotinfoWithGraph.csv"
 # Batch size for the dataloaders
 BATCH_SIZE = 128
 
-GENERATE_GRPHS = False
+GENERATE_GRPHS = True
 
 AUG_PATH = "./datasets/augmented_knotinfo.csv"
 
