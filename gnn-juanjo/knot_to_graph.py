@@ -1,6 +1,7 @@
 import planar_diagram as pd
 import numpy as np
 import networkx as nx
+from settings import *
 
 """
 Función de activación para la feature de distancia de cada edge.
@@ -64,17 +65,29 @@ def graphRepresentation(knot:pd.Knot):
     # Añadir los edges al grafo, con sus características.
     for path in knot.paths():
         face1, face2 = getKnotFaces(path)
-        graph.add_edges_from(
-            [
-                (knotFaces.index(face1), knotFaces.index(face2),
-                {"edge_attr":
-                    (
-                        distance_activation(distance(path)),
-                        delta(path),
-                        # float(distance(path)%2)
-                    )
-                })
-            ]
-        )
+        if USE_DISTANCE_ATTRIBUTE:
+            graph.add_edges_from(
+                [
+                    (knotFaces.index(face1), knotFaces.index(face2),
+                    {"edge_attr":
+                        (
+                            distance_activation(distance(path)),
+                            delta(path),
+                            # float(distance(path)%2)
+                        )
+                    })
+                ]
+            )
+        else:
+            graph.add_edges_from(
+                [
+                    (knotFaces.index(face1), knotFaces.index(face2),
+                    {"edge_attr":
+                        (
+                            delta(path)
+                        )
+                    })
+                ]
+            )
     
     return graph
