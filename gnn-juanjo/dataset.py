@@ -76,7 +76,7 @@ def getDegree(knot_dataset):
     return deg
 
 
-def fetchDataset(filePath = PATH):
+def fetchDataset(filePath = TRAIN_PATH):
     """
     Fetches and preprocesses the knot dataset from a CSV file.
 
@@ -89,9 +89,14 @@ def fetchDataset(filePath = PATH):
 
     # Read the knot dataset from a CSV file
     knotinfo = pd.DataFrame(pd.read_csv(filePath, sep = ",", header = 0, index_col = False))
+
+    # Keep only hyperbolic knots (no-hyperbolic knots have volume 0 in this database)
+    if FEATURE == "Volume":
+        knotinfo = knotinfo[knotinfo["Volume"] != 0]
     
     # Random subsample the dataset to speed up experiments
     knotinfo.reindex(np.random.permutation(knotinfo.index))
+
     knotinfo = knotinfo[0 : SUBSET_SIZE]
     knot_dataset = knotinfo.reset_index(drop=True)
 
@@ -109,6 +114,7 @@ def fetchDataset(filePath = PATH):
     knot_dataset = pd.DataFrame()
     knot_dataset["Crossing Number"] = knotinfo["Crossing Number"]
 
+    
     if FEATURE =="UNKNOT":
         knot_dataset["y"]=knotinfo["Crossing Number"].map(lambda number: 0 if number>0 else 1)
     elif FEATURE=="Q-Positive":

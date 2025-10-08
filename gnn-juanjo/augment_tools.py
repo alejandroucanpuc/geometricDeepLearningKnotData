@@ -39,7 +39,8 @@ def formatPD_Notation(PD_code):
     return json.dumps(PD_code).replace(",",";")
 
 def augmentData(shuffledKnots, originPath, savePath):
-    knotinfo = pd.DataFrame(pd.read_csv(originPath, sep = ",", header = 0, index_col = False))
+    knotinfo = pd.DataFrame(pd.read_csv(originPath, sep = ",", header = 0, index_col = False))[:][: 810]
+    # print(knotinfo)
     knotinfo["knot"] = knotinfo["PD Notation"].map(lambda knot:json.loads(knot.replace(";",",")))
 
     # print(knotinfo)
