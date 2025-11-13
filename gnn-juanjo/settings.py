@@ -5,10 +5,10 @@ SEED = 31
 FEATURE = "Volume"
 
 # Path to the CSV train file
-TRAIN_PATH = "./datasets/knotInfo_augmented_30.csv"
+TRAIN_PATH = "./datasets/knot_data_aug30.csv"
 
 # Path to the CSV test file
-TEST_PATH = "./datasets/linkDataset_augmented.csv"
+TEST_PATH = "./datasets/link_data_aug30.csv"
 
 
 # Batch size for the dataloaders
