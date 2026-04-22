@@ -5,10 +5,10 @@ SEED = 31
 FEATURE = "Volume"
 
 # Path to the CSV train file
-TRAIN_PATH = "./datasets/knot_data_aug30.csv"
+TRAIN_PATH = "./datasets/knot_data.csv"
 
 # Path to the CSV test file
-TEST_PATH = "./datasets/link_data_aug30.csv"
+TEST_PATH = "./datasets/link_data.csv"
 
 
 # Batch size for the dataloaders
@@ -27,7 +27,7 @@ SUBSET_SIZE = -1
 ADDITIONAL = False
 
 # Options for loss function: "abs" or "squared" or "percentage"
-LOSS = "percentage"  
+LOSS = "abs"  
 
 # Type of GNN convolutional layer: "GAT", "TRANS", "PNA"
 CONV_TYPE = "GAT"

@@ -92,7 +92,9 @@ def fetchDataset(filePath = TRAIN_PATH):
 
     # Keep only hyperbolic knots (no-hyperbolic knots have volume 0 in this database)
     if FEATURE == "Volume":
-        knotinfo = knotinfo[knotinfo["Volume"] != 0]
+        # knotinfo['Volume'] = pd.to_numeric(knotinfo['Volume'], errors='coerce') # Convert to numeric
+        # knotinfo.dropna(subset = ["Volume"]) # Drop non numeric values
+        knotinfo = knotinfo[knotinfo["Volume"] != 0] # Drop non-hyperbolic knots
     
     # Random subsample the dataset to speed up experiments
     knotinfo.reindex(np.random.permutation(knotinfo.index))

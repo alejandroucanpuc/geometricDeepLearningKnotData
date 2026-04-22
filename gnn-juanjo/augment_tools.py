@@ -16,11 +16,11 @@ def randomType3ReidemeisterMove(link):
 def augmentKnot(PD_code, complexity=45):
 
     knot = Link(PD_code)
-    # Apply 2 * complexity times type 1 & 2 reidemeister moves...
+    # Apply 2 * complexity times type 1, 2 and 3 reidemeister moves...
     knot.backtrack(complexity*2)
 
     for _ in range(complexity):
-        knot.backtrack(5,prob_type_1=0.2, prob_type_2=0.8)
+        knot.backtrack(5, prob_type_1=0.2, prob_type_2=0.8)
         for _ in range(int(complexity/20)):
             randomType3ReidemeisterMove(knot)
     knot._rebuild(same_components_and_orientations=True)
@@ -38,17 +38,17 @@ def augmentKnot(PD_code, complexity=45):
 def formatPD_Notation(PD_code):
     return json.dumps(PD_code).replace(",",";")
 
-def augmentData(shuffledKnots, originPath, savePath):
-    knotinfo = pd.DataFrame(pd.read_csv(originPath, sep = ",", header = 0, index_col = False))[:][: 810]
+def augmentData(shuffledKnots, originPath, savePath, complexity = 45):
+    knotinfo = pd.DataFrame(pd.read_csv(originPath, sep = ",", header = 0, index_col = False))[:][:]
     # print(knotinfo)
     knotinfo["knot"] = knotinfo["PD Notation"].map(lambda knot:json.loads(knot.replace(";",",")))
 
     # print(knotinfo)
 
-    augmented_dataframes = [knotinfo.copy()]
+    augmented_dataframes = [] # [knotinfo.copy()]
     for _ in range(shuffledKnots):
         knotinfo_augmented = knotinfo.copy()
-        knotinfo_augmented["PD Notation"] = knotinfo_augmented["knot"].apply(augmentKnot).apply(formatPD_Notation)
+        knotinfo_augmented["PD Notation"] = knotinfo_augmented["knot"].apply(augmentKnot, complexity = complexity).apply(formatPD_Notation)
         # knotinfo_augmented["knot"]
         augmented_dataframes.append(knotinfo_augmented)
     del knotinfo_augmented["knot"]
@@ -60,7 +60,8 @@ def augmentData(shuffledKnots, originPath, savePath):
     # augmented_dataframes.append(knotinfo)
     concatenated_df = pd.concat(augmented_dataframes, axis=0, ignore_index=True)
     # concatenated_df.to_csv("./datasets/augmented_knotinfo_34.csv", index=False)
-    concatenated_df.to_csv("datasets/" + savePath, index=False)
+    concatenated_df.drop("knot", axis = 1, inplace = True) # Remove "knot" temporal column
+    concatenated_df.to_csv("datasets/" + savePath, index=False, float_format='%.15f')
 
 
 def generateUnknotData(generatedUnknots, savePath):
